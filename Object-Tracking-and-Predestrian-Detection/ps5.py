@@ -349,7 +349,8 @@ class AppearanceModelPF(ParticleFilter):
     	minx = np.clip(minx, 0, sw - mw - 1)
     	miny = np.clip(miny, 0, sh - mh - 1)
     	# print(minx)
-    	temp_model = self.frame[miny:miny+mh, minx:minx+mw]
+    	# print(frame.shape)
+    	temp_model = frame[miny:miny+mh, minx:minx+mw]
     	# print(self.alpha)
     	if temp_model.shape == self.template.shape:
     		self.template = self.alpha * temp_model + (1.-self.alpha) * self.template
@@ -371,45 +372,47 @@ class AppearanceModelPF(ParticleFilter):
 
         self.particles += np.random.normal(0, self.sigma_dyn, self.particles.shape)
         ParticleFilter.observe(self,frame)
+        frame = ParticleFilter.get_gray_scale(self,frame)
+        if self.alpha > 0:
+        	self.update_model(frame)
         self.particles = ParticleFilter.resample_particles(self)
         # print(self.state)
         # print(self.state)
-        if self.alpha > 0:
-        	self.update_model(frame)
+        
 
         # raise NotImplementedError
 
 
-# class MDParticleFilter(AppearanceModelPF):
-#     """A variation of particle filter tracker that incorporates more dynamics."""
+class MDParticleFilter(AppearanceModelPF):
+    """A variation of particle filter tracker that incorporates more dynamics."""
 
-#     def __init__(self, frame, template, **kwargs):
-#         """Initializes MD particle filter object.
+    def __init__(self, frame, template, **kwargs):
+        """Initializes MD particle filter object.
 
-#         The documentation for this class is the same as the ParticleFilter
-#         above. By calling super(...) all the elements used in ParticleFilter
-#         will be inherited so you don't have to declare them again.
-#         """
+        The documentation for this class is the same as the ParticleFilter
+        above. By calling super(...) all the elements used in ParticleFilter
+        will be inherited so you don't have to declare them again.
+        """
 
-#         super(MDParticleFilter, self).__init__(frame, template, **kwargs)  # call base class constructor
-#         # If you want to add more parameters, make sure you set a default value so that
-#         # your test doesn't fail the autograder because of an unknown or None value.
-#         #
-#         # The way to do it is:
-#         # self.some_parameter_name = kwargs.get('parameter_name', default_value)
+        super(MDParticleFilter, self).__init__(frame, template, **kwargs)  # call base class constructor
+        # If you want to add more parameters, make sure you set a default value so that
+        # your test doesn't fail the autograder because of an unknown or None value.
+        #
+        # The way to do it is:
+        # self.some_parameter_name = kwargs.get('parameter_name', default_value)
 
-#     def process(self, frame):
-#         """Processes a video frame (image) and updates the filter's state.
+    def process(self, frame):
+        """Processes a video frame (image) and updates the filter's state.
 
-#         This process is also inherited from ParticleFilter. Depending on your
-#         implementation, you may comment out this function and use helper
-#         methods that implement the "More Dynamics" procedure.
+        This process is also inherited from ParticleFilter. Depending on your
+        implementation, you may comment out this function and use helper
+        methods that implement the "More Dynamics" procedure.
 
-#         Args:
-#             frame (numpy.array): color BGR uint8 image of current video frame,
-#                                  values in [0, 255].
+        Args:
+            frame (numpy.array): color BGR uint8 image of current video frame,
+                                 values in [0, 255].
 
-#         Returns:
-#             None.
-#         """
-#         raise NotImplementedError
+        Returns:
+            None.
+        """
+        raise NotImplementedError

@@ -224,7 +224,7 @@ def part_2a():
 
     num_particles = 400  # Define the number of particles
     sigma_mse = 10.  # Define the value of sigma for the measurement exponential equation
-    sigma_dyn = 20.  # Define the value of sigma for the particles movement (dynamics)
+    sigma_dyn = 10.  # Define the value of sigma for the particles movement (dynamics)
 
     run_particle_filter(ps5.ParticleFilter,  # particle filter model class
                         os.path.join(input_dir, "circle"),
@@ -244,10 +244,11 @@ def part_2b():
                    33: os.path.join(output_dir, 'ps5-2-b-2.png'),
                    84: os.path.join(output_dir, 'ps5-2-b-3.png'),
                    99: os.path.join(output_dir, 'ps5-2-b-4.png')}
+    # save_frames = {10: os.path.join(output_dir, 'test.png')}
 
-    num_particles = 0  # Define the number of particles
-    sigma_mse = 0  # Define the value of sigma for the measurement exponential equation
-    sigma_dyn = 0  # Define the value of sigma for the particles movement (dynamics)
+    num_particles = 400  # Define the number of particles
+    sigma_mse = 10  # Define the value of sigma for the measurement exponential equation
+    sigma_dyn = 20  # Define the value of sigma for the particles movement (dynamics)
 
     run_particle_filter(ps5.ParticleFilter,  # particle filter model class
                         os.path.join(input_dir, "pres_debate_noisy"),
@@ -264,11 +265,12 @@ def part_3():
     save_frames = {22: os.path.join(output_dir, 'ps5-3-a-1.png'),
                    50: os.path.join(output_dir, 'ps5-3-a-2.png'),
                    160: os.path.join(output_dir, 'ps5-3-a-3.png')}
+    # save_frames = {22: os.path.join(output_dir, 'test.png')}
 
-    num_particles = 10  # Define the number of particles
+    num_particles = 400  # Define the number of particles
     sigma_mse = 10  # Define the value of sigma for the measurement exponential equation
-    sigma_dyn = 10  # Define the value of sigma for the particles movement (dynamics)
-    alpha = 0.05  # Set a value for alpha
+    sigma_dyn = 15  # Define the value of sigma for the particles movement (dynamics)
+    alpha = 0.2  # Set a value for alpha
 
     run_particle_filter(ps5.AppearanceModelPF,  # particle filter model class
                         os.path.join(input_dir, "pres_debate"),
@@ -279,7 +281,7 @@ def part_3():
                         sigma_dyn=sigma_dyn, alpha=alpha,
                         template_coords=template_rect)  # Add more if you need to
 
-'''
+
 def part_4():
     template_rect = {'x': 210, 'y': 37, 'w': 103, 'h': 285}
 
@@ -288,9 +290,9 @@ def part_4():
                    240: os.path.join(output_dir, 'ps5-4-a-3.png'),
                    300: os.path.join(output_dir, 'ps5-4-a-4.png')}
 
-    num_particles = 0  # Define the number of particles
-    sigma_md = 0  # Define the value of sigma for the measurement exponential equation
-    sigma_dyn = 0  # Define the value of sigma for the particles movement (dynamics)
+    num_particles = 400  # Define the number of particles
+    sigma_md = 10  # Define the value of sigma for the measurement exponential equation
+    sigma_dyn = 10  # Define the value of sigma for the particles movement (dynamics)
 
     run_particle_filter(ps5.MDParticleFilter,
                         os.path.join(input_dir, "pedestrians"),
@@ -300,7 +302,7 @@ def part_4():
                         sigma_dyn=sigma_dyn,
                         template_coords=template_rect)  # Add more if you need to
 
-
+'''
 def part_5():
     """Tracking multiple Targets.
 
@@ -330,7 +332,7 @@ if __name__ == '__main__':
     # part_1c()
     # part_2a()
     # part_2b()
-    part_3()
-    # part_4()
+    # part_3()
+    part_4()
     # part_5()
     # part_6()
