@@ -105,10 +105,11 @@ class ParticleFilter(object):
         #
         # The way to do it is:
         # self.some_parameter_name = kwargs.get('parameter_name', default_value)
-
-        self.template = template
-        self.frame = frame
-        m,n,_ = np.shape(self.frame)
+        self.frame = self.get_gray_scale(frame)
+        self.template = self.get_gray_scale(template)
+        # self.template = template
+        # self.frame = frame
+        m,n= np.shape(self.frame)
         particles_x = np.random.choice(n, self.num_particles, True).astype(float)
         particles_y = np.random.choice(m, self.num_particles, True).astype(float)
         self.particles = np.stack((particles_x, particles_y), axis=-1)#p.ones((self.num_particles,2)) * 150 # Initialize your particles array. Read the docstring.
@@ -118,6 +119,14 @@ class ParticleFilter(object):
         self.index = np.arange(self.num_particles)
         self.new_particle = np.zeros_like(self.particles)
         # raise NotImplementedError
+
+    def get_gray_scale(self,frame):
+    	img_temp_R = frame[:,:,0]
+    	img_temp_G = frame[:,:,1]
+    	img_temp_B = frame[:,:,2]
+    	img_temp = img_temp_R * 0.3 + img_temp_G * 0.58 + img_temp_B * 0.12
+    	return img_temp
+
 
     def get_particles(self):
         """Returns the current particles state.
@@ -146,7 +155,7 @@ class ParticleFilter(object):
             float: similarity value.
         """
 
-        m, n, _ = template.shape
+        m, n = template.shape
         mse = np.sum(np.subtract(template,frame_cutout,dtype=np.float32) **2.)
         mse = mse / float(m*n)
         sim = (-1) * mse / 2. / (self.sigma_exp **2.)
@@ -169,8 +178,8 @@ class ParticleFilter(object):
             numpy.array: particles data structure.
         """
         
-        sw, sh,_ = self.template.shape
-        mw, mh,_ = self.frame.shape
+        sw, sh = self.template.shape
+        mw, mh = self.frame.shape
         # sample new particle indices using the distribution of the weights
         j = np.random.choice(self.index, self.num_particles, True, p=self.weights)
         # sample the particles using the distribution of the weights
@@ -190,8 +199,9 @@ class ParticleFilter(object):
 
     def observe(self, img):
         # get patches corresponding to each particle
-        mh,mw,_ = np.shape(self.template)
-        sh,sw,_ = np.shape(img)
+        mh,mw = np.shape(self.template)
+        img = self.get_gray_scale(img)
+        sh,sw = np.shape(img)
         minx = (self.particles[:,0] - mw/2).astype(np.int)
         miny = (self.particles[:,1] - mh/2).astype(np.int)
         minx = np.clip(minx, 0, sw - mw - 1)
@@ -226,11 +236,6 @@ class ParticleFilter(object):
         Returns:
             None.
         """
-        img_temp_R = frame[:,:,0]
-        img_temp_G = frame[:,:,1] 
-        img_temp_B = frame[:,:,2]
-        img_temp = img_temp_R * 0.3 + img_temp_G * 0.58 + img_temp_B * 0.12
-
         self.particles += np.random.normal(0, self.sigma_dyn, self.particles.shape)
         self.observe(frame)
         self.particles = self.resample_particles()
@@ -271,11 +276,11 @@ class ParticleFilter(object):
         """
 
         def distance(pa,pb,a,b):
-        	dis = np.sqrt((pa-a) **2 + (pb-b)**2)
+        	dis = np.sqrt((pa-a)**2 + (pb-b)**2)
         	return dis
 
-        frame_out = np.copy(frame_in)
-        m,n,_ = np.shape(self.template)
+        # frame_out = np.copy(frame_in)
+        m,n = np.shape(self.template)
 
         x_weighted_mean = 0
         y_weighted_mean = 0
@@ -285,25 +290,28 @@ class ParticleFilter(object):
         for i in range(self.num_particles):
             x_weighted_mean += self.particles[i,0] * self.weights[i]
             y_weighted_mean += self.particles[i,1] * self.weights[i]
-            cv2.circle(frame_out, (int(self.particles[i,0]), int(self.particles[i,1])), 2, (100, 100, 100), -1)
+            cv2.circle(frame_in, (int(self.particles[i,0]), int(self.particles[i,1])), 2, (200, 0, 0), -1)
 
-        cv2.rectangle(frame_out, (int(x_weighted_mean) - n // 2, int(y_weighted_mean) - m // 2),
-                         (int(x_weighted_mean) + n // 2, int(y_weighted_mean) + m // 2), (100, 100, 100), 2)
+        cv2.rectangle(frame_in, (int(x_weighted_mean) - n // 2, int(y_weighted_mean) - m // 2),
+                         (int(x_weighted_mean) + n // 2, int(y_weighted_mean) + m // 2), (0, 200, 0), 2)
 
         # temp = np.linalg.norm(self.particles - (x_weighted_mean,y_weighted_mean))
         # dis_weighted_mean = np.sum(temp * self.weights.reshape((-1,1)))
+        # print(self.particles[0,0],self.particles[190,0])
         dis_weighted_mean = 0
         for i in range(self.num_particles):
         	temp = distance(self.particles[i,0],self.particles[i,1],x_weighted_mean,y_weighted_mean) 
         	dis_weighted_mean += temp * self.weights[i]
+        # print(dis_weighted_mean)
 
-        cv2.circle(frame_out, (int(x_weighted_mean), int(y_weighted_mean)), int(dis_weighted_mean), (100, 100, 100), 2)
+        cv2.circle(frame_in, (int(x_weighted_mean), int(y_weighted_mean)), int(dis_weighted_mean), (200, 200, 200), 2)
 
         # Complete the rest of the code as instructed.
-        # cv2.imshow('test',frame_out)
+        # cv2.imshow('test',self.template)
         # cv2.waitKey(0)
-        return frame_out
-        raise NotImplementedError
+        # frame_in = np.copy(frame_out)
+        return frame_in
+        # raise NotImplementedError
 
 
 class AppearanceModelPF(ParticleFilter):
@@ -328,9 +336,11 @@ class AppearanceModelPF(ParticleFilter):
         # The way to do it is:
         # self.some_parameter_name = kwargs.get('parameter_name', default_value)
 
+
+
     def update_model(self,frame):
-    	sh,sw,_ = np.shape(self.frame)
-    	mh,mw,_ = np.shape(self.template)
+    	sh,sw = np.shape(self.frame)
+    	mh,mw = np.shape(self.template)
     	ind = np.argmax(self.weights)
     	x_weighted_mean = self.particles[ind,0]
     	y_weighted_mean = self.particles[ind,1]
@@ -339,7 +349,7 @@ class AppearanceModelPF(ParticleFilter):
     	minx = np.clip(minx, 0, sw - mw - 1)
     	miny = np.clip(miny, 0, sh - mh - 1)
     	# print(minx)
-    	temp_model = frame[miny:miny+mh, minx:minx+mw]
+    	temp_model = self.frame[miny:miny+mh, minx:minx+mw]
     	# print(self.alpha)
     	if temp_model.shape == self.template.shape:
     		self.template = self.alpha * temp_model + (1.-self.alpha) * self.template
