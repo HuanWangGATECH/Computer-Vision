@@ -307,7 +307,7 @@ class ParticleFilter(object):
         cv2.circle(frame_in, (int(x_weighted_mean), int(y_weighted_mean)), int(dis_weighted_mean), (200, 200, 200), 2)
 
         # Complete the rest of the code as instructed.
-        # cv2.imshow('test',self.template)
+        # cv2.imshow('test',frame_in)
         # cv2.waitKey(0)
         # frame_in = np.copy(frame_out)
         return frame_in
@@ -377,9 +377,7 @@ class AppearanceModelPF(ParticleFilter):
         	self.update_model(frame)
         self.particles = ParticleFilter.resample_particles(self)
         # print(self.state)
-        # print(self.state)
         
-
         # raise NotImplementedError
 
 
@@ -401,6 +399,10 @@ class MDParticleFilter(AppearanceModelPF):
         # The way to do it is:
         # self.some_parameter_name = kwargs.get('parameter_name', default_value)
 
+        self.beta = kwargs.get('beta')
+        self.count = 0
+        self.template_not_change = ParticleFilter.get_gray_scale(self,template)
+
     def process(self, frame):
         """Processes a video frame (image) and updates the filter's state.
 
@@ -415,4 +417,24 @@ class MDParticleFilter(AppearanceModelPF):
         Returns:
             None.
         """
-        raise NotImplementedError
+        self.count += 1
+        ParticleFilter.observe(self,frame)
+        ind = np.argmax(self.weights)
+        maxw = self.weights[ind]
+        if (maxw >= 0.025 and (120<self.count<160)):
+            self.particles[:,0] -= 0.03
+            pass
+        elif (maxw >= 0.025 and 185<self.count<230):
+            self.particles[:,0] -= 0.5
+            pass
+        else:
+            self.particles += np.random.normal(0, self.sigma_dyn, self.particles.shape)
+            self.particles = ParticleFilter.resample_particles(self)
+        	# print(std)
+        ratio = (self.beta)**(self.count)
+        self.template = cv2.resize(self.template_not_change, (0,0), fx=ratio, fy=ratio)
+       
+        # raise NotImplementedError
+
+
+
