@@ -431,46 +431,78 @@ class HaarFeature:
        	(h,w) = self.size
         if self.feat_type == (2, 1):  # two_horizontal
         	sh = self.size[0] // 2
-        	A = ii[r-1][c-1]
-        	B = ii[r-1][c+w-1]
-        	C = ii[r+sh-1][c-1]
-        	D = ii[r+sh-1][c+w-1]
+        	A = ii[r][c]
+        	B = ii[r][c+w]
+        	C = ii[r+sh][c]
+        	D = ii[r+sh][c+w]
         	sum1 = A + D - B - C
-        	E = ii[r-1][c+w-1]
-        	F = ii[r+h-1][c+w-1]
+        	E = ii[r+h][c]
+        	F = ii[r+h][c+w]
         	sum2 = C + F - E - D 
         	return (sum1 - sum2)
 
         if self.feat_type == (1, 2):  # two_vertical
         	sw = self.size[1] // 2
-        	A = ii[r-1][c-1]
-        	B = ii[r-1][c+sw-1]
-        	C = ii[r+h-1][c-1]
-        	D = ii[r+h-1][c+sw-1]
+        	A = ii[r][c]
+        	B = ii[r][c+sw]
+        	C = ii[r+h][c]
+        	D = ii[r+h][c+sw]
         	sum1 = A + D - B - C
-        	E = ii[r-1][c+w-1]
-        	F = ii[r+h-1][c+w-1]
+        	E = ii[r][c+w]
+        	F = ii[r+h][c+w]
         	sum2 = B + F - E - D
         	return (sum1 - sum2)
             
 
         if self.feat_type == (3, 1):  # three_horizontal
-        	sw = self.size[0] // 3
-        	A = ii[r-1][c-1]
-        	B = ii[r-1][c+w-1]
-        	C = ii[r+sh-1][c-1]
-        	D = ii[r+sh-1][c+w-1]
+        	sh = self.size[0] // 3
+        	A = ii[r][c]
+        	B = ii[r][c+w]
+        	C = ii[r+sh][c]
+        	D = ii[r+sh][c+w]
         	sum1 = A + D - B - C
-        	E = ii[r-1][c+w-1]
-        	F = ii[r+h-1][c+w-1]
+        	E = ii[r+sh+sh][c]
+        	F = ii[r+sh+sh][c+w]
         	sum2 = C + F - E - D 
-        	return (sum1 - sum2)
+        	G = ii[r+h][c]
+        	H = ii[r+h][c+w]
+        	sum3 = E + H - F - G
+        	return (sum1 - sum2 + sum3)
             
 
         if self.feat_type == (1, 3):  # three_vertical
+        	sw = self.size[1] // 3
+        	A = ii[r][c]
+        	B = ii[r][c+sw]
+        	C = ii[r+h][c]
+        	D = ii[r+h][c+sw]
+        	sum1 = A + D - B - C
+        	E = ii[r][c+sw+sw]
+        	F = ii[r+h][c+sw+sw]
+        	sum2 = B + F - E - D
+        	G = ii[r][c+w]
+        	H = ii[r+h][c+w]
+        	sum3 = E + H - G - F
+        	return (sum1 - sum2 + sum3)
             
 
         if self.feat_type == (2, 2):  # four_square
+        	sw = self.size[1] // 2
+        	sh = self.size[0] // 2
+        	A = ii[r][c]
+        	B = ii[r][c+sw]
+        	C = ii[r+sh][c]
+        	D = ii[r+sh][c+sw]
+        	sum1 = A + D - B - C
+        	E = ii[r][c+w]
+        	F = ii[r+sh][c+w]
+        	sum2 = B - F - E - D
+        	G = ii[r+h][c]
+        	H = ii[r+h][c+sw]
+        	sum3 = C + H - D - G
+        	I = ii[r+h][c+w]
+        	sum4 = D + I - F - H
+        	return (sum2 + sum3 - sum1 - sum4)
             
 
 
