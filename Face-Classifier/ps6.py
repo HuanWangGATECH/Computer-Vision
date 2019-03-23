@@ -41,6 +41,8 @@ def load_images(folder, size=(32, 32)):
     	label_temp = frame.split('.')[0][-2:]
     	# print(int(label_temp))
     	y.append(int(label_temp))
+    X = np.asarray(X)
+    y = np.asarray(y)
     return (X,y)
     # raise NotImplementedError
 
@@ -117,7 +119,8 @@ def pca(X, k):
     # raise NotImplementedError
     M = get_mean_face(X)
     C = X - M
-    V = np.cov(C.transpose())
+    V = np.cov(C.transpose(), bias=True)
+    V = V * X.shape[0]
     values,vectors = np.linalg.eigh(V)
     idx = values.argsort()[::-1] 
     evalues = values[idx]
@@ -230,10 +233,17 @@ class Boosting:
             numpy.array: Predictions, one for each row in X.
         """
         # raise NotImplementedError
-        m,n = np.shape(X)
-        out = np.array([0]*m)
-        for i in range(m):
-        	out[i] = np.sign(np.dot(self.weakClassifiers[:][i].transpose(),self.alphas.transpose()))
+        values = []
+        for j in range(len(self.alphas)):
+        	predict_temp = []
+        	for i in range(X.shape[0]):
+        		x_temp = X[i,:]
+        		predict_temp.append(self.weakClassifiers[j].predict(x_temp))
+        	predict_temp = np.asarray(predict_temp)
+        	print(np.shape(predict_temp))
+        	values.append(self.alphas[j]*predict_temp)
+        out = np.sign(np.sum(values, axis=0))
+        out = np.asarray(out.copy())
         return out
 
 
@@ -427,61 +437,62 @@ class HaarFeature:
         """
 
         # raise NotImplementedError
+        ii = ii.astype(np.float32)
         (r,c) = self.position
        	(h,w) = self.size
         if self.feat_type == (2, 1):  # two_horizontal
         	sh = self.size[0] // 2
-        	A = ii[r][c]
-        	B = ii[r][c+w]
-        	C = ii[r+sh][c]
-        	D = ii[r+sh][c+w]
+        	A = ii[r-1][c-1]
+        	B = ii[r-1][c+w-1]
+        	C = ii[r+sh-1][c-1]
+        	D = ii[r+sh-1][c+w-1]
         	sum1 = A + D - B - C
-        	E = ii[r+h][c]
-        	F = ii[r+h][c+w]
+        	E = ii[r+h-1][c-1]
+        	F = ii[r+h-1][c+w-1]
         	sum2 = C + F - E - D 
         	return (sum1 - sum2)
 
         if self.feat_type == (1, 2):  # two_vertical
         	sw = self.size[1] // 2
-        	A = ii[r][c]
-        	B = ii[r][c+sw]
-        	C = ii[r+h][c]
-        	D = ii[r+h][c+sw]
+        	A = ii[r-1][c-1]
+        	B = ii[r-1][c+sw-1]
+        	C = ii[r+h-1][c-1]
+        	D = ii[r+h-1][c+sw-1]
         	sum1 = A + D - B - C
-        	E = ii[r][c+w]
-        	F = ii[r+h][c+w]
+        	E = ii[r-1][c+w-1]
+        	F = ii[r+h-1][c+w-1]
         	sum2 = B + F - E - D
         	return (sum1 - sum2)
             
 
         if self.feat_type == (3, 1):  # three_horizontal
         	sh = self.size[0] // 3
-        	A = ii[r][c]
-        	B = ii[r][c+w]
-        	C = ii[r+sh][c]
-        	D = ii[r+sh][c+w]
+        	A = ii[r-1][c-1]
+        	B = ii[r-1][c+w-1]
+        	C = ii[r+sh-1][c-1]
+        	D = ii[r+sh-1][c+w-1]
         	sum1 = A + D - B - C
-        	E = ii[r+sh+sh][c]
-        	F = ii[r+sh+sh][c+w]
+        	E = ii[r+sh+sh-1][c-1]
+        	F = ii[r+sh+sh-1][c+w-1]
         	sum2 = C + F - E - D 
-        	G = ii[r+h][c]
-        	H = ii[r+h][c+w]
+        	G = ii[r+h-1][c-1]
+        	H = ii[r+h-1][c+w-1]
         	sum3 = E + H - F - G
         	return (sum1 - sum2 + sum3)
             
 
         if self.feat_type == (1, 3):  # three_vertical
         	sw = self.size[1] // 3
-        	A = ii[r][c]
-        	B = ii[r][c+sw]
-        	C = ii[r+h][c]
-        	D = ii[r+h][c+sw]
+        	A = ii[r-1][c-1]
+        	B = ii[r-1][c+sw-1]
+        	C = ii[r+h-1][c-1]
+        	D = ii[r+h-1][c+sw-1]
         	sum1 = A + D - B - C
-        	E = ii[r][c+sw+sw]
-        	F = ii[r+h][c+sw+sw]
+        	E = ii[r-1][c+sw+sw-1]
+        	F = ii[r+h-1][c+sw+sw-1]
         	sum2 = B + F - E - D
-        	G = ii[r][c+w]
-        	H = ii[r+h][c+w]
+        	G = ii[r-1][c+w-1]
+        	H = ii[r+h-1][c+w-1]
         	sum3 = E + H - G - F
         	return (sum1 - sum2 + sum3)
             
@@ -489,18 +500,18 @@ class HaarFeature:
         if self.feat_type == (2, 2):  # four_square
         	sw = self.size[1] // 2
         	sh = self.size[0] // 2
-        	A = ii[r][c]
-        	B = ii[r][c+sw]
-        	C = ii[r+sh][c]
-        	D = ii[r+sh][c+sw]
+        	A = ii[r-1][c-1]
+        	B = ii[r-1][c+sw-1]
+        	C = ii[r+sh-1][c-1]
+        	D = ii[r+sh-1][c+sw-1]
         	sum1 = A + D - B - C
-        	E = ii[r][c+w]
-        	F = ii[r+sh][c+w]
-        	sum2 = B - F - E - D
-        	G = ii[r+h][c]
-        	H = ii[r+h][c+sw]
+        	E = ii[r-1][c+w-1]
+        	F = ii[r+sh-1][c+w-1]
+        	sum2 = B + F - E - D
+        	G = ii[r+h-1][c-1]
+        	H = ii[r+h-1][c+sw-1]
         	sum3 = C + H - D - G
-        	I = ii[r+h][c+w]
+        	I = ii[r+h-1][c+w-1]
         	sum4 = D + I - F - H
         	return (sum2 + sum3 - sum1 - sum4)
             
