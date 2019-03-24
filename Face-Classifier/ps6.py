@@ -167,8 +167,7 @@ class Boosting:
         self.num_obs,_ = np.shape(X)
         self.weights = np.array([1.0 / self.num_obs] * self.num_obs)  # uniform weights
         self.eps = 0.0001
-        self.wkc = WeakClassifier(X, y, self.weights, self.eps)
-
+        
     def train(self):
         """Implement the for loop shown in the problem set instructions."""
         # raise NotImplementedError
@@ -176,21 +175,22 @@ class Boosting:
         	sum_temp = np.sum(self.weights)
         	self.weights = self.weights / sum_temp
         	eps_temp = 0
-        	self.wkc.train()
+        	wkc = WeakClassifier(self.Xtrain, self.ytrain, self.weights, self.eps)
+        	wkc.train()
         	# self.weakClassifiers = (self.wkc.predict(self.Xtrain))
         	# print(np.shape(self.Xtrain))
         	predict_temp = []
         	for i in range(self.num_obs):
-	        	predict_temp.append(self.wkc.predict(self.Xtrain[i]))
+	        	predict_temp.append(wkc.predict(self.Xtrain[i]))
 	        	index = self.ytrain[i] != predict_temp[i]
 	        	eps_temp += index * self.weights[i]
-	        self.weakClassifiers.append(predict_temp)
+	        self.weakClassifiers.append(wkc)
 	        # print(np.shape(self.weakClassifiers))
 	        self.alphas.append(0.5 * math.log((1.-eps_temp)/eps_temp))
 	        # print(np.shape(self.weakClassifiers))
 	        if eps_temp >= self.eps:
 	        	for i in range(self.num_obs):
-	        		self.weights[i] = self.weights[i] * math.exp((-1) * self.ytrain[i]*self.alphas[j]*self.weakClassifiers[-1][i])
+	        		self.weights[i] = self.weights[i] * math.exp((-1) * self.ytrain[i]*self.alphas[j]*wkc.predict(self.Xtrain[i]))
 	        else:
 	        	break
 
@@ -240,7 +240,7 @@ class Boosting:
         		x_temp = X[i,:]
         		predict_temp.append(self.weakClassifiers[j].predict(x_temp))
         	predict_temp = np.asarray(predict_temp)
-        	print(np.shape(predict_temp))
+        	# print(np.shape(predict_temp))
         	values.append(self.alphas[j]*predict_temp)
         out = np.sign(np.sum(values, axis=0))
         out = np.asarray(out.copy())
@@ -585,6 +585,7 @@ class ViolaJones:
                                             [sizei-1, sizej-1]))
         self.haarFeatures = haarFeatures
 
+
     def train(self, num_classifiers):
 
         # Use this scores array to train a weak classifier using VJ_Classifier
@@ -601,11 +602,27 @@ class ViolaJones:
         weights = np.hstack((weights_pos, weights_neg))
 
         print(" -- select classifiers --")
+        
         for i in range(num_classifiers):
 
             # TODO: Complete the Viola Jones algorithm
 
-            raise NotImplementedError
+            sum_temp = np.sum(weights)
+            weights = weights / sum_temp
+            vjc = VJ_Classifier(scores, self.labels, weights, thresh=0, feat=0, polarity=1)
+            vjc.train()
+            error = vjc.error
+            self.classifiers.append(vjc)
+
+            beta = float(error) / (1. - error)
+            for j in range(len(self.integralImages)):
+            	if self.labels[j] == vjc.predict(scores[j]): weights[j] = weights[j]
+            	else: weights[j] = weights[j] * beta
+            weights = np.asarray(weights)
+            self.alphas.append(math.log((1.)/beta))
+	        
+
+            # raise NotImplementedError
 
     def predict(self, images):
         """Return predictions for a given list of images.
@@ -621,16 +638,20 @@ class ViolaJones:
 
         scores = np.zeros((len(ii), len(self.haarFeatures)))
 
+        for i, x in enumerate(ii):
         # Populate the score location for each classifier 'clf' in
         # self.classifiers.
-
+        	for clf in self.classifiers:
         # Obtain the Haar feature id from clf.feature
+        		ind = clf.feature
 
         # Use this id to select the respective feature object from
         # self.haarFeatures
+        		feature = self.haarFeatures[ind]
 
         # Add the score value to score[x, feature id] calling the feature's
         # evaluate function. 'x' is each image in 'ii'
+        		scores[i, ind] = feature.evaluate(x)
 
         result = []
 
@@ -639,7 +660,15 @@ class ViolaJones:
 
         for x in scores:
             # TODO
-            raise NotImplementedError
+            temp_sum = 0.
+            for j in range(len(self.classifiers)):
+            	temp_sum += self.alphas[j] * self.classifiers[j].predict(x)
+            temp_alpha = 0.5 * np.sum(self.alphas)
+            res = -1
+            if temp_sum >= temp_alpha: 
+            	res = 1
+            result.append(res)
+            # raise NotImplementedError
 
         return result
 
@@ -659,4 +688,44 @@ class ViolaJones:
             None.
         """
 
-        raise NotImplementedError
+        # raise NotImplementedError
+        img_temp = np.copy(image)
+        img_gray = cv2.cvtColor(img_temp,cv2.COLOR_BGR2GRAY)
+
+        w,b = np.shape(img_gray)
+        r = 24
+        c = 24
+        ul = []
+        lr = []
+        windows = []
+        for i in range(w-r):
+        	for j in range(b-c):
+        		window = np.zeros((c,r))
+        		ul.append([j,i])
+        		lr.append([j+c,i+r])
+        		window[:,:] = img_gray[i:(i+r),j:(j+c)]
+        		windows.append(window)
+        # windows = np.asarray(windows)
+        # print(np.shape(windows))
+        
+        # print(np.shape(windows))
+        predictions = self.predict(windows)
+
+        pos_ul,pos_lr = [],[]
+        for i, pred in enumerate(predictions):
+        	if pred == 1:
+        		pos_ul.append(ul[i])
+        		pos_lr.append(lr[i])
+
+        pos_ul = np.asarray(pos_ul)
+        pos_lr = np.asarray(pos_lr)
+
+        ave_ul = np.mean(pos_ul, axis=0).astype(int)
+        ave_lr = np.mean(pos_lr, axis=0).astype(int)
+
+        cv2.rectangle(img_temp, tuple(ave_ul), tuple(ave_lr), (0,0,255), 2)
+        cv2.imwrite("output/{}.png".format(filename), img_temp)
+
+
+
+
