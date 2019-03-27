@@ -616,8 +616,8 @@ class ViolaJones:
 
             beta = float(error) / (1. - error)
             for j in range(len(self.integralImages)):
-            	if self.labels[j] == vjc.predict(scores[j]): weights[j] = weights[j]
-            	else: weights[j] = weights[j] * beta
+            	if self.labels[j] == vjc.predict(scores[j]): weights[j] = weights[j] * beta
+            	else: weights[j] = weights[j] 
             weights = np.asarray(weights)
             self.alphas.append(math.log((1.)/beta))
 	        
@@ -720,8 +720,8 @@ class ViolaJones:
         pos_ul = np.asarray(pos_ul)
         pos_lr = np.asarray(pos_lr)
 
-        ave_ul = np.mean(pos_ul, axis=0).astype(int)
-        ave_lr = np.mean(pos_lr, axis=0).astype(int)
+        ave_ul = np.mean(pos_ul, axis=0).astype(int) + (3,-3)
+        ave_lr = np.mean(pos_lr, axis=0).astype(int) + (3,-3)
 
         cv2.rectangle(img_temp, tuple(ave_ul), tuple(ave_lr), (0,0,255), 2)
         cv2.imwrite("output/{}.png".format(filename), img_temp)

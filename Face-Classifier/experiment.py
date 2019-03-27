@@ -95,7 +95,7 @@ def part_1a_1b():
 
 
 def part_1c():
-    p = 0.9  # Select a split percentage value
+    p = 0.8  # Select a split percentage value
     k = 5  # Select a value for k
 
     size = [32, 32]
@@ -160,7 +160,7 @@ def part_2a():
     y[y0_ids] = 1
     y[y1_ids] = -1
 
-    p = 0.8
+    p = 0.1
     Xtrain, ytrain, Xtest, ytest = ps6.split_dataset(X, y, p)
 
     # Picking random numbers
@@ -184,7 +184,7 @@ def part_2a():
     # raise NotImplementedError
     print('(Weak) Training accuracy {0:.2f}%'.format(wk_accuracy))
 
-    num_iter = 5
+    num_iter = 20
 
     # print(np.shape(Xtrain))
 
@@ -256,7 +256,7 @@ def part_4_a_b():
     VJ = ps6.ViolaJones(train_pos, train_neg, integral_images)
     VJ.createHaarFeatures()
 
-    VJ.train(4)
+    VJ.train(5)
 
     VJ.haarFeatures[VJ.classifiers[0].feature].preview(filename="ps6-4-b-1")
     VJ.haarFeatures[VJ.classifiers[1].feature].preview(filename="ps6-4-b-2")
@@ -278,7 +278,7 @@ def part_4_a_b():
 
     temp_vj = np.zeros_like(predictions)
     temp_vj[predictions==real_labels] = 1
-    vj_accuracy = 100 * float(np.sum(temp_vj) / len(temp_vj)) #None
+    vj_accuracy = 100 * float(np.sum(temp_vj) / len(real_labels)) #None
     # raise NotImplementedError
     print("Prediction accuracy on testing: {0:.2f}%".format(vj_accuracy))
 
@@ -302,9 +302,9 @@ def part_4_c():
 
 
 if __name__ == "__main__":
-    # part_1a_1b()
-    # part_1c()
-    # part_2a()
-    # part_3a()
-    # part_4_a_b()
-    # part_4_c()
+    part_1a_1b()
+    part_1c()
+    part_2a()
+    part_3a()
+    part_4_a_b()
+    part_4_c()
