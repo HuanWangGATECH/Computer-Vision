@@ -1,4 +1,4 @@
-# Introduction to Augmented Reality
+# Face Classifier
 
 This project is aiming to implement face recognition using PCA, (Ada)Boosting, and the Viola-Jones algorithm. The main goal is the learn the advantages and disadvantages of PCA, Boosting, and Viola-Jones methods. Learning how the face detection/recognition work, explore the pros & cons of various techniques applied to this project. Also, identify the inherent challenges of working on these face detection methods.  
 
