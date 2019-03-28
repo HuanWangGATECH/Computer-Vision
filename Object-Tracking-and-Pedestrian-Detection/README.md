@@ -4,11 +4,11 @@ This project is aiming to implement tracking methods for image sequences and vid
 
 ### Files
 
-* [Function code (Python)](https://github.com/chd415/Computer-Version/blob/master/Object-Tracking-and-Predestrian-Detection/ps5.py)
+* [Function code (Python)](https://github.com/chd415/Computer-Version/blob/master/Object-Tracking-and-Pedestrian-Detection/ps5.py)
 
-* [Driver code (Python)](https://github.com/chd415/Computer-Version/blob/master/Object-Tracking-and-Predestrian-Detection/experiment.py)
+* [Driver code (Python)](https://github.com/chd415/Computer-Version/blob/master/Object-Tracking-and-Pedestrian-Detection/experiment.py)
 
-* [Project report](https://github.com/chd415/Computer-Version/blob/master/Object-Tracking-and-Predestrian-Detection/ps5_report.pdf)
+* [Project report](https://github.com/chd415/Computer-Version/blob/master/Object-Tracking-and-Pedestrian-Detection/ps5_report.pdf)
 
 ### Results Example
 
