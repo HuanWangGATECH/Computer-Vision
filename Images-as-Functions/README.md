@@ -1,4 +1,4 @@
-# Introduction to Augmented Reality
+# Image as Functions
 
 This project is aiming to learning how to load an image, manipulate the values, produce some output. The main point of this project is to learn how images can be represented as functions. Learn the difference between an RGB image and Monochrome / Grayscale images. Applying some linear algebra concepts to manipulate image pixel values. And perform basic statistical operations in arrays as well as introduce the concept of noise in an image. 
 
