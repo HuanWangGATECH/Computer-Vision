@@ -12,9 +12,9 @@ python run.py
 
 ### Files
 
-* [Function code (Python)](https://github.com/chd415/Computer-Version/blob/master/Motion-Detection/ps4.py)
+* [Function code (Python)](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/run.py)
 
-* [Project report](https://github.com/chd415/Computer-Version/blob/master/Motion-Detection/ps4_report.pdf)
+* [Project report](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/report.pdf)
 
 ### Results Example
 

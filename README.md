@@ -17,5 +17,5 @@ This repo contains projects done with course CS6476 from Georgia Tech. The main 
 
 * [Face Classifier](https://github.com/chd415/Computer-Version/tree/master/Face-Classifier)
 
-* [Classification and Detection with Convolutional Neural Networks](https://github.com/chd415/Computer-Version/tree/master/Classification%20and%20Detection%20with%20Convolutional%20Neural%20Networks)
+* [Classification and Detection with Convolutional Neural Networks](https://github.com/chd415/Computer-Version/tree/master/Classification-and-Detection-with-Convolutional-Neural-Networks)
 
