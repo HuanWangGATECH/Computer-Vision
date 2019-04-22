@@ -8,7 +8,14 @@ build conda environment:
 
 conda env create -f cv_proj.yml
 conda activate cv_proj
+
+run for five images detection:
+
 python run.py
+
+run for video detection:
+
+python video.py
 
 ### Files
 
@@ -16,15 +23,17 @@ python run.py
 
 * [Project report](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/report.pdf)
 
+
 ### Results Example
 
+* Model architecture
 <img src="./licence/flowchart.png" width="850" />
 
-* Model architecture
+* Images with correct/incorrect detection
 
 <img src="./licence/fiveimage.png" width="850" />
 
-* Images with correct/incorrect detection
+
 
 * [Digit detection on video](https://www.dropbox.com/s/w9oahxx9e0ev0vp/output.mp4?dl=0)
 
