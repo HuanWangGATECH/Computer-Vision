@@ -35,9 +35,9 @@ python video.py
 
 
 
-* [Digit detection on video](https://www.dropbox.com/s/w9oahxx9e0ev0vp/output.mp4?dl=0)
+* [Digit detection on video](https://www.dropbox.com/s/yem9rn8a5y0esij/output.mp4?dl=0)
 
-* [Presentation of work](https://www.dropbox.com/s/q5gf0xuawraeagk/presentation.mp4?dl=0)
+* [Presentation of work](https://www.dropbox.com/s/t4xni9ne5ruueru/presentation.mp4?dl=0)
 
 
 
