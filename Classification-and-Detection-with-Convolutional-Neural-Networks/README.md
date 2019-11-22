@@ -19,7 +19,7 @@ python video.py
 
 ### Files
 
-* [Training Model (Python)]()
+* [Training Model (Python)](https://github.com/chd415/Computer-Vision/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/Qiao_run.ipynb)
 
 * [Function code (Python)](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/run.py)
 
