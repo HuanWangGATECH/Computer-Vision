@@ -20,16 +20,18 @@ run for video detection:
 
 ### Files
 
-* [Training Model (TensorFlow)](https://github.com/chd415/Computer-Vision/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/Qiao-tf.py)
+* [Training Model (TensorFlow) - blue step](https://github.com/chd415/Computer-Vision/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/Qiao-tf.py)
 
-* [Training Model (PyTorch)](https://github.com/chd415/Computer-Vision/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/Qiao-pytorch.py)
+* [Training Model (PyTorch)  - blue step](https://github.com/chd415/Computer-Vision/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/Qiao-pytorch.py)
 
-* [Function code (Python)](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/run.py)
+* [Function code (Python) - green step](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/run.py)
 
 * [Project report](https://github.com/chd415/Computer-Version/blob/master/Classification-and-Detection-with-Convolutional-Neural-Networks/report.pdf)
 
 
 ### Results Example
+
+* [Digit detection on video](https://youtu.be/TdwY1eImXxg)
 
 * Model architecture
 <img src="./licence/flowchart.png" width="850" />
@@ -40,7 +42,6 @@ run for video detection:
 
 
 
-* [Digit detection on video](https://youtu.be/TdwY1eImXxg)
 
 
 
