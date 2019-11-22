@@ -7,6 +7,7 @@ This project is aiming to use different Convolutional Neural Network based metho
 build conda environment:
 
 `conda env create -f cv_proj.yml`
+
 `conda activate cv_proj`
 
 run for five images detection:
@@ -39,9 +40,7 @@ run for video detection:
 
 
 
-* [Digit detection on video](https://www.dropbox.com/s/yem9rn8a5y0esij/output.mp4?dl=0)
-
-* [Presentation of work](https://www.dropbox.com/s/t4xni9ne5ruueru/presentation.mp4?dl=0)
+* [Digit detection on video](https://youtu.be/TdwY1eImXxg)
 
 
 
