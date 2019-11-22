@@ -6,16 +6,16 @@ This project is aiming to use different Convolutional Neural Network based metho
 
 build conda environment:
 
-conda env create -f cv_proj.yml
-conda activate cv_proj
+`conda env create -f cv_proj.yml`
+`conda activate cv_proj`
 
 run for five images detection:
 
-python run.py
+`python run.py`
 
 run for video detection:
 
-python video.py
+`python video.py`
 
 ### Files
 
