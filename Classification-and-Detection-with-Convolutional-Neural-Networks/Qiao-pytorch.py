@@ -10,7 +10,7 @@ import h5py
 import math
 import matplotlib.pyplot as plt
 import seaborn as sns
-from cnn_utils import *
+# from cnn_utils import *
 
 save_to_file_dir = './qiao_logs/saved_logs'
 
@@ -135,28 +135,27 @@ for epoch in range(num_epoches):
     
     m = X_train.shape[0]
     num_minibatches = int(m / minibatch_size)
-    epoch_x, epoch_y = get_batch2(X_train, y_train, minibatch_size, dtype)
     
-    epoch_x = epoch_x.requires_grad_()
-    optimizer.zero_grad()
-    print(epoch_x.shape)
-    outputs = model(epoch_x)
-#    epoch_y = torch.tensor(epoch_y, dtype=torch.long)
-    loss = criterion(outputs, epoch_y)
-    loss.backward()
-    optimizer.step()
+    for i in range(num_minibatches):
+        epoch_x, epoch_y = get_batch2(X_train, y_train, minibatch_size, dtype)
+        epoch_x = epoch_x.requires_grad_()
+        optimizer.zero_grad()
+        outputs = model(epoch_x)
+        loss = criterion(outputs, epoch_y)
+        loss.backward()
+        optimizer.step()
 
-    iter += 1
+        iter += 1
 
     correct = 0
     total = 0
-    valid_x, valid_y = get_batch2(X_valid, y_valid, minibatch_size, dtype)
+    valid_x, valid_y = get_batch2(X_valid, y_valid, 10, dtype)
     valid_x = valid_x.requires_grad_()
     outputs = model(valid_x)
     _, predicted = torch.max(outputs.data, 1)
     valid_y = np.argmax(valid_y, axis=1)
     correct = (predicted == valid_y).sum()
-
+    total = float(len(valid_y))
     accuracy = 100 * correct / total
 
     print('Iteration: {}. Loss: {}. Accuracy: {}'.format(iter, loss.item(), accuracy))
