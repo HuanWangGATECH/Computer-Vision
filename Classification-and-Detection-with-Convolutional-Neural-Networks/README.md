@@ -39,10 +39,3 @@ run for video detection:
 * Images with correct/incorrect detection
 
 <img src="./licence/fiveimage.png" width="850" />
-
-
-
-
-
-
- - 
