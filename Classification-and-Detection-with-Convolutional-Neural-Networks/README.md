@@ -31,6 +31,9 @@ run for video detection:
 
 ### Results Example
 
+
+* [Digit detection on video](https://youtu.be/TdwY1eImXxg)
+
 * Model architecture
 <img src="./licence/flowchart.png" width="850" />
 
@@ -40,7 +43,6 @@ run for video detection:
 
 
 
-* [Digit detection on video](https://youtu.be/TdwY1eImXxg)
 
 
 
